@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Hello from '@/components/Hello';
 import Tab from '@/components/Tab';
+import Carousel from '@/components/Carousel';
 
 Vue.use(Router);
 
@@ -16,6 +17,11 @@ export default new Router({
       path: '/tab',
       name: 'Tab',
       component: Tab
+    },
+    {
+      path: '/carousel',
+      name: 'Carousel',
+      component: Carousel
     }
   ]
 });
