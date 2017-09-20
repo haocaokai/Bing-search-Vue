@@ -12,7 +12,7 @@
     <input type="submit" class="submit" @click="search()">
   </div>
   <transition name="fade">
-    <div class="focus-box" v-if="focusBox"></div>
+    <div class="focus-box" v-if="showFocusBox"></div>
   </transition>
 </div>
   
@@ -27,15 +27,15 @@ export default  {
   name : 'search',
   data(){
     return{
-      msg : '',
+      msg : 'testMsg',
       keyword : '',
-      focusBox : false,
+      showFocusBox : false,
       searchSrc: 'http://cn.bing.com/search?q=',
       Datas : []
     }
   },
   methods : {
-    get:function(){
+    get(){
       var that = this
       jsonp('https://sug.so.360.cn/suggest?word=' + this.keyword + '&encodein=utf-8&encodeout=utf-8',null, function(err,data){
         that.Datas = data.s;
@@ -43,13 +43,16 @@ export default  {
       })
       
     },
-    onFocus:function(){
-      this.focusBox = true;
+    onFocus(){
+      this.showFocusBox = true;
     },
-    onBlur:function(){
-      this.focusBox = false;
+    onBlur(){
+      this.showFocusBox = false;
     },
-    search:function(){
+    search(){
+      if(this.keyword.length == 0){
+        window.open(this.searchSrc + '时间');
+      }
       window.open(this.searchSrc + this.keyword);
       this.keyword = '';
     }
