@@ -10,6 +10,19 @@
       @keyup="get()"
       @keydown.enter="search()">
     <input type="submit" class="submit" @click="search()">
+    <div class="search-select">
+      <transition-group name="itemfade" tag="ul" mode="out-in" v-cloak>
+        <li 
+          v-for="(value, index) in Datas" 
+          :key="value" 
+          class="search-select-option search-select-list"
+          :class="{selectbg:index==now}" 
+          @mouseover="selectHover(index)"
+          @click="selectClick(index)">
+          {{value}}
+        </li>
+      </transition-group>
+    </div>
   </div>
   <transition name="fade">
     <div class="focus-box" v-if="showFocusBox"></div>
@@ -28,6 +41,7 @@ export default  {
   data(){
     return{
       msg : 'testMsg',
+      now : 0,
       keyword : '',
       showFocusBox : false,
       searchSrc: 'http://cn.bing.com/search?q=',
@@ -41,7 +55,6 @@ export default  {
         that.Datas = data.s;
         console.log(that.Datas)
       })
-      
     },
     onFocus(){
       this.showFocusBox = true;
@@ -54,7 +67,14 @@ export default  {
         window.open(this.searchSrc + '时间');
       }
       window.open(this.searchSrc + this.keyword);
-      this.keyword = '';
+      
+    },
+    selectHover(index){
+      this.now = index;
+    },
+    selectClick(index){
+      this.keyword = this.Datas[index];
+      this.search();
     }
   }
 }
@@ -63,10 +83,19 @@ export default  {
 
 
 <style>
+  *{margin: 0;padding: 0; list-style: none;}
   .logo, .search-box{
     float: left;
     z-index: 99;
     position: relative;
+  }
+  .search-select {
+    position: relative;
+    top: 0;
+    width: 609px;
+    box-sizing: border-box;
+    z-index: 999;
+    background: #ccc;
   }
   .search-box{ 
     margin-left: 30px; 
@@ -81,11 +110,26 @@ export default  {
     outline: none;
     border: none;
   }
-
+  .search-select li {
+    background-color: #fff;
+    width: 100%;
+    padding:7px 10px;
+  }
+  .search-select li:first-child{
+    border-top:1px solid #ccc;
+  }
+  .search-select-option {
+    box-sizing: border-box;
+    padding: 7px 10px;
+  }
+  .selectbg {
+    background-color: #eee !important;
+    cursor: pointer
+  }
   .submit{ 
     width: 45px; 
     height: 48px; 
-    background: url(../assets/search-btn.png)no-repeat 0 0; 
+    background: url(../assets/search-btn.png)no-repeat 0 3px; 
     border: none;
     text-indent: -999px;
     cursor: pointer;
@@ -101,10 +145,15 @@ export default  {
     top: 0;
     z-index: 3;
   }
-  .fade-enter-active, .fade-leave-active{
-    transition: opacity .5s;
+
+  /*动画*/
+  .fade-enter-active, .fade-leave-active,.search-select-list{
+    transition: all 0.5s
   }
-  .fade-enter, .fade-leave-to{
+  .fade-enter, .fade-leave-to,.itemfade-enter,.itemfade-leave-active{
     opacity: 0;
+  }
+  .itemfade-leave-active {
+    position: absolute;
   }
 </style>
